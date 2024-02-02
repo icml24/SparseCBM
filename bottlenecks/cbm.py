@@ -1,7 +1,9 @@
 import torch
 import transformers
 import torch.nn as nn
+import seaborn as sns
 from configs import *
+import matplotlib.pyplot as plt
 import torch.nn.functional as nn
 
 class SparseCBLmodel_for_logits(nn.Module):
@@ -20,6 +22,7 @@ class SparseCBLmodel_for_logits(nn.Module):
     def forward(self, **batch):
         cbl_out = self.cbl(self.clip(**batch).logits_per_image)
         return cbl_out, self.head(cbl_out)
+
 
 def contrastive_loss(logits, dim: int):
     """
@@ -63,3 +66,29 @@ def criterion_l1(model, l1_lambda=1e-3):
         l1_loss += torch.norm(param, p=1)
         
     return l1_loss * l1_lambda
+
+def draw_bottleneck(image, cbl_logits, k: int, concepts: list, draw_probs: bool=False):
+    """
+    Having a CBL outputs draws a bottleneck scores for a single PIL image
+    """
+    top_values, top_indices = torch.topk(cbl_logits, k)
+    
+    if draw_probs == True:
+        top_values = torch.nn.functional.softmax(top_values, dim=-1)
+    
+    import pandas as pd
+    data = pd.DataFrame({
+        'Concepts': [concepts[i] for i in top_indices.squeeze().tolist()],
+        'Probability': top_values.squeeze().tolist()
+    })
+
+    plt.figure(figsize=(10, 6), dpi=300)
+    sns.barplot(x='Probability', y='Concepts', data=data)
+    plt.xlabel('Weight', fontsize=16)
+    plt.ylabel('Concepts', fontsize=16)
+    plt.title('Top {} Logits'.format(k), fontsize=16)
+
+    for i, value in enumerate(top_values.squeeze().tolist()):
+        plt.text(value + 0.01, i, f'{value:.2f}', va='center')
+ 
+    plt.show()
