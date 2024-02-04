@@ -4,7 +4,7 @@ import torch.nn as nn
 import seaborn as sns
 from configs import *
 import matplotlib.pyplot as plt
-import torch.nn.functional as nn
+import torch.nn.functional as F
 
 class SparseCBLmodel_for_logits(nn.Module):
     """
