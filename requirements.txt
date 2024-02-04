@@ -140,7 +140,6 @@ mdurl==0.1.2
 mergedeep==1.3.4
 mistune==2.0.4
 mkdocs==1.4.3
-ml-cavalry @ file:///Users/mahbooh/ml-cavalry/dist/ml_cavalry-0.1.0-py3-none-any.whl#sha256=a95dcb95fa7e0656c1e5bcf8e7fe73ac4dd6e74ade9661d37f2dc297bf3e3021
 more-itertools==10.2.0
 mpmath==1.3.0
 multidict==6.0.4
