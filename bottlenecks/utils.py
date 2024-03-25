@@ -7,25 +7,27 @@ import ast
 from copy import deepcopy
 import json
 
+
 class color:
-   PURPLE = '\033[95m'
-   CYAN = '\033[96m'
-   DARKCYAN = '\033[36m'
-   BLUE = '\033[94m'
-   GREEN = '\033[92m'
-   YELLOW = '\033[93m'
-   RED = '\033[91m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
-   END = '\033[0m'
+    PURPLE = "\033[95m"
+    CYAN = "\033[96m"
+    DARKCYAN = "\033[36m"
+    BLUE = "\033[94m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    END = "\033[0m"
 
 
-def plot_training(model, optimizer, n_epochs, lr, train_loader, test_loader, log_interval):
-
+def plot_training(
+    model, optimizer, n_epochs, lr, train_loader, test_loader, log_interval
+):
     train_losses = []
     train_counter = []
     test_losses = []
-    test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+    test_counter = [i * len(train_loader.dataset) for i in range(n_epochs + 1)]
 
     def train(epoch):
         model.train()
@@ -38,7 +40,8 @@ def plot_training(model, optimizer, n_epochs, lr, train_loader, test_loader, log
             if batch_idx % log_interval == 0:
                 train_losses.append(loss.item())
                 train_counter.append(
-                    (batch_idx*64) + ((epoch-1)*len(train_loader.dataset)))
+                    (batch_idx * 64) + ((epoch - 1) * len(train_loader.dataset))
+                )
 
     def test():
         model.eval()
@@ -52,9 +55,14 @@ def plot_training(model, optimizer, n_epochs, lr, train_loader, test_loader, log
                 correct += pred.eq(target.data.view_as(pred)).sum()
         test_loss /= len(test_loader.dataset)
         test_losses.append(test_loss)
-        print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+        print(
+            "\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(
+                test_loss,
+                correct,
+                len(test_loader.dataset),
+                100.0 * correct / len(test_loader.dataset),
+            )
+        )
 
     test()
     for epoch in range(1, n_epochs + 1):
@@ -64,16 +72,24 @@ def plot_training(model, optimizer, n_epochs, lr, train_loader, test_loader, log
     print("End of test")
 
     fig = plt.figure()
-    plt.plot(train_counter, train_losses, color='blue')
-    plt.plot(test_counter, test_losses, color='red')
-    plt.legend(['Train Loss', 'Test Loss'], loc='upper right')
-    plt.xlabel('number of training examples')
-    plt.ylabel('loss function')
+    plt.plot(train_counter, train_losses, color="blue")
+    plt.plot(test_counter, test_losses, color="red")
+    plt.legend(["Train Loss", "Test Loss"], loc="upper right")
+    plt.xlabel("number of training examples")
+    plt.ylabel("loss function")
     fig.show()
 
 
-def plot_averaged_training(model, optimizer, n_epochs, lr, train_loader, test_loader, log_interval, number_of_iterations):
-    
+def plot_averaged_training(
+    model,
+    optimizer,
+    n_epochs,
+    lr,
+    train_loader,
+    test_loader,
+    log_interval,
+    number_of_iterations,
+):
     train_losses_avg = []
     test_losses_avg = []
 
@@ -84,14 +100,13 @@ def plot_averaged_training(model, optimizer, n_epochs, lr, train_loader, test_lo
                 torch.nn.init.zeros_(m.bias)
 
     for i in range(number_of_iterations):
-
-        print(color.BOLD + "Training iteration: " + color.END, i+1)
+        print(color.BOLD + "Training iteration: " + color.END, i + 1)
         model.apply(weights_init)
 
         train_losses = []
         train_counter = []
         test_losses = []
-        test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+        test_counter = [i * len(train_loader.dataset) for i in range(n_epochs + 1)]
 
         def train(epoch):
             model.train()
@@ -104,7 +119,9 @@ def plot_averaged_training(model, optimizer, n_epochs, lr, train_loader, test_lo
                 if batch_idx % log_interval == 0:
                     train_losses.append(loss.item())
                     train_counter.append(
-                        (batch_idx*len(data)) + ((epoch-1)*len(train_loader.dataset)))
+                        (batch_idx * len(data))
+                        + ((epoch - 1) * len(train_loader.dataset))
+                    )
 
         def test():
             model.eval()
@@ -118,9 +135,14 @@ def plot_averaged_training(model, optimizer, n_epochs, lr, train_loader, test_lo
                     correct += pred.eq(target.data.view_as(pred)).sum()
             test_loss /= len(test_loader.dataset)
             test_losses.append(test_loss)
-            print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-            test_loss, correct, len(test_loader.dataset),
-            100. * correct / len(test_loader.dataset)))
+            print(
+                "\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(
+                    test_loss,
+                    correct,
+                    len(test_loader.dataset),
+                    100.0 * correct / len(test_loader.dataset),
+                )
+            )
 
         test()
         for epoch in range(1, n_epochs + 1):
@@ -135,12 +157,13 @@ def plot_averaged_training(model, optimizer, n_epochs, lr, train_loader, test_lo
     test_losses_avg = list(np.mean(test_losses_avg, axis=0))
 
     fig = plt.figure()
-    plt.plot(train_counter, train_losses_avg, color='blue')
-    plt.plot(test_counter, test_losses_avg, color='red')
-    plt.legend(['Train Loss', 'Test Loss'], loc='upper right')
-    plt.xlabel('number of training examples')
-    plt.ylabel('loss function')
+    plt.plot(train_counter, train_losses_avg, color="blue")
+    plt.plot(test_counter, test_losses_avg, color="red")
+    plt.legend(["Train Loss", "Test Loss"], loc="upper right")
+    plt.xlabel("number of training examples")
+    plt.ylabel("loss function")
     fig.show()
+
 
 def group_uniques_full(hist, losses_to_average, verbose=False, group_norm_diffs=False):
     grouped_hist = {}
@@ -155,18 +178,19 @@ def group_uniques_full(hist, losses_to_average, verbose=False, group_norm_diffs=
             grouped_hist[label] = {
                 "hist": deepcopy(one_optim_hist),
                 "repeats": {
-                    loss_name: [1] * len(one_optim_hist[loss_name]) for loss_name in losses_to_average
-                }
+                    loss_name: [1] * len(one_optim_hist[loss_name])
+                    for loss_name in losses_to_average
+                },
             }
             if group_norm_diffs:
                 grouped_hist[label]["hist"]["norm_diffs"] = [
                     [np.array(x)] for x in grouped_hist[label]["hist"]["norm_diffs"]
                 ]
             continue
-        
+
         for loss_name in losses_to_average:
             losses = one_optim_hist[loss_name]
-                
+
             for i, loss_elem in enumerate(losses):
                 if i < len(grouped_hist[label]["hist"][loss_name]):
                     grouped_hist[label]["hist"][loss_name][i] += loss_elem
@@ -176,28 +200,37 @@ def group_uniques_full(hist, losses_to_average, verbose=False, group_norm_diffs=
                 if i >= len(grouped_hist[label]["repeats"][loss_name]):
                     grouped_hist[label]["repeats"][loss_name].append(0)
                 grouped_hist[label]["repeats"][loss_name][i] += 1
-        
+
         if group_norm_diffs:
             if len(grouped_hist[label]["hist"]["norm_diffs"]) == 0:
                 if "norm_diffs_x" in one_optim_hist:
-                    grouped_hist[label]["hist"]["norm_diffs_x"] = one_optim_hist["norm_diffs_x"]
+                    grouped_hist[label]["hist"]["norm_diffs_x"] = one_optim_hist[
+                        "norm_diffs_x"
+                    ]
                 grouped_hist[label]["hist"]["norm_diffs"] = [
                     [np.array(x)] for x in one_optim_hist["norm_diffs"]
                 ]
             else:
-                for x, y in zip(grouped_hist[label]["hist"]["norm_diffs"], one_optim_hist["norm_diffs"]):
+                for x, y in zip(
+                    grouped_hist[label]["hist"]["norm_diffs"],
+                    one_optim_hist["norm_diffs"],
+                ):
                     x.append(np.array(y))
 
     for key in grouped_hist:
         one_optim_hist = grouped_hist[key]
         if verbose and len(one_optim_hist["repeats"][losses_to_average[0]]) > 0:
             repeats_1 = float(one_optim_hist["repeats"][losses_to_average[0]][0])
-            print("Repeats_1 = {}, Name = {}".format(repeats_1, one_optim_hist["hist"]["name"]))
+            print(
+                "Repeats_1 = {}, Name = {}".format(
+                    repeats_1, one_optim_hist["hist"]["name"]
+                )
+            )
         for loss_name in losses_to_average:
             for i in range(len(one_optim_hist["hist"][loss_name])):
                 repeats = one_optim_hist["repeats"][loss_name][i]
                 one_optim_hist["hist"][loss_name][i] /= repeats
-        
+
         if group_norm_diffs:
             for i, group in enumerate(one_optim_hist["hist"]["norm_diffs"]):
                 means = []
@@ -208,10 +241,12 @@ def group_uniques_full(hist, losses_to_average, verbose=False, group_norm_diffs=
                     group[j] = (elem - elem.mean()) / elem.std()
                 mean = np.mean(means)
                 std = np.mean(stds)
-                one_optim_hist["hist"]["norm_diffs"][i] = np.concatenate(group) * std + mean
+                one_optim_hist["hist"]["norm_diffs"][i] = (
+                    np.concatenate(group) * std + mean
+                )
 
     grouped_hist = [grouped_hist[x]["hist"] for x in grouped_hist]
-            
+
     return grouped_hist
 
 

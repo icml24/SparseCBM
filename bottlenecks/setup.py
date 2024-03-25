@@ -10,8 +10,14 @@ import bokeh.models as bm, bokeh.plotting as pl
 from sklearn.preprocessing import StandardScaler
 
 
-def get_image_features(path_to_im: str, classes: dict, N: int, model_name="ViT-B-16", model_author="openai",
-                       device="cuda"):
+def get_image_features(
+    path_to_im: str,
+    classes: dict,
+    N: int,
+    model_name="ViT-B-16",
+    model_author="openai",
+    device="cuda",
+):
     """
     Args:
         path_to_im: path to the directory with images data
@@ -33,8 +39,9 @@ def get_image_features(path_to_im: str, classes: dict, N: int, model_name="ViT-B
     selected_images = [item for sublist in selected_images for item in sublist]
 
     image_inputs = []
-    clip_model, _, preprocess = open_clip.create_model_and_transforms(model_name, pretrained=model_author,
-                                                                      device=device)
+    clip_model, _, preprocess = open_clip.create_model_and_transforms(
+        model_name, pretrained=model_author, device=device
+    )
     for name in tqdm(selected_images):
         im = Image.open(name)
         im_input = preprocess(im).unsqueeze(0).to(device)
@@ -54,19 +61,21 @@ def get_image_features(path_to_im: str, classes: dict, N: int, model_name="ViT-B
 
 
 def remove_prefixes(strings):
-    prefixes = ['a', 'an', 'the']
+    prefixes = ["a", "an", "the"]
     result = []
     for string in strings:
         words = string.split()
         if words[0].lower() in prefixes:
-            result.append(' '.join(words[1:]))
+            result.append(" ".join(words[1:]))
         else:
             result.append(string)
 
     return result
 
 
-def get_text_features(path_to_text: str, model_name="ViT-B-16", model_author="openai", device="cuda"):
+def get_text_features(
+    path_to_text: str, model_name="ViT-B-16", model_author="openai", device="cuda"
+):
     """
     Args:
         path_to_text: path to the directory with texts data
@@ -80,8 +89,9 @@ def get_text_features(path_to_text: str, model_name="ViT-B-16", model_author="op
         texts = remove_prefixes(texts)
 
     text_encodings = []
-    clip_model, _, preprocess = open_clip.create_model_and_transforms(model_name, pretrained=model_author,
-                                                                      device=device)
+    clip_model, _, preprocess = open_clip.create_model_and_transforms(
+        model_name, pretrained=model_author, device=device
+    )
 
     with torch.no_grad():
         for c in tqdm(texts):
@@ -101,12 +111,14 @@ def similarity(a: torch.Tensor, b: torch.Tensor):
 
 
 def cubed_similarity(a: torch.Tensor, b: torch.Tensor):
-    nom = a ** 3 @ (b ** 3).T
-    denom = (a ** 3).norm(dim=-1) * (b ** 3).norm(dim=-1)
+    nom = a**3 @ (b**3).T
+    denom = (a**3).norm(dim=-1) * (b**3).norm(dim=-1)
     return nom / denom
 
 
-def get_dot_prods_matrix(image_features: torch.Tensor, text_features: torch.Tensor, eps=1e-8):
+def get_dot_prods_matrix(
+    image_features: torch.Tensor, text_features: torch.Tensor, eps=1e-8
+):
     """
     Args:
         image_features: tensor of shape [num_images, dim]
@@ -125,17 +137,28 @@ def get_dot_prods_matrix(image_features: torch.Tensor, text_features: torch.Tens
     return matrix
 
 
-def draw_vectors(x, y, radius=10, alpha=0.25, color='blue',
-                 width=600, height=400, show=True, **kwargs):
-    """ draws an interactive plot for data points with auxiliary info on hover """
-    if isinstance(color, str): color = [color] * len(x)
-    data_source = bm.ColumnDataSource({'x': x, 'y': y, 'color': color, **kwargs})
+def draw_vectors(
+    x,
+    y,
+    radius=10,
+    alpha=0.25,
+    color="blue",
+    width=600,
+    height=400,
+    show=True,
+    **kwargs,
+):
+    """draws an interactive plot for data points with auxiliary info on hover"""
+    if isinstance(color, str):
+        color = [color] * len(x)
+    data_source = bm.ColumnDataSource({"x": x, "y": y, "color": color, **kwargs})
 
-    fig = pl.figure(active_scroll='wheel_zoom', width=width, height=height)
-    fig.scatter('x', 'y', size=radius, color='color', alpha=alpha, source=data_source)
+    fig = pl.figure(active_scroll="wheel_zoom", width=width, height=height)
+    fig.scatter("x", "y", size=radius, color="color", alpha=alpha, source=data_source)
 
     fig.add_tools(bm.HoverTool(tooltips=[(key, "@" + key) for key in kwargs.keys()]))
-    if show: pl.show(fig)
+    if show:
+        pl.show(fig)
     return fig
 
 
@@ -155,7 +178,9 @@ def generate_slices_for_classes(classes: dict, V_matrix: torch.Tensor):
     return slices
 
 
-def calculate_similarity_score(classes: dict, V_rows: torch.Tensor, T_matrix: torch.Tensor, sim: str = "sim"):
+def calculate_similarity_score(
+    classes: dict, V_rows: torch.Tensor, T_matrix: torch.Tensor, sim: str = "sim"
+):
     """
     V_rows: a rows of V_matrix for the same class
     T_matrix: classes-concepts matrix
@@ -212,10 +237,10 @@ def draw_similarity_scores(scores_dict: dict, true_class: str):
         return
 
     scores = scores_dict[true_class]
-    df = pd.DataFrame(list(scores.items()), columns=['Class', 'Total Similarity Score'])
+    df = pd.DataFrame(list(scores.items()), columns=["Class", "Total Similarity Score"])
 
     plt.figure(figsize=(6, 3))  # 12 6
-    sns.scatterplot(data=df, x='Class', y='Total Similarity Score')
+    sns.scatterplot(data=df, x="Class", y="Total Similarity Score")
     plt.title(f"Similarity Scores for True Class: {true_class}")
     plt.xticks(rotation=45)
     plt.xlabel("Classes")
@@ -224,8 +249,9 @@ def draw_similarity_scores(scores_dict: dict, true_class: str):
     plt.show()
 
 
-def calculate_similarity_score_accuracy_for_class(class_name: str, V_matrix: torch.Tensor, T_matrix: torch.Tensor,
-                                                  classes: dict):
+def calculate_similarity_score_accuracy_for_class(
+    class_name: str, V_matrix: torch.Tensor, T_matrix: torch.Tensor, classes: dict
+):
     """
     Test the accuracy of the hypothesis
     return: accuracy score for the class_name label by similarity method
@@ -251,15 +277,23 @@ def calculate_similarity_score_accuracy_for_class(class_name: str, V_matrix: tor
     return 100 * correct / total
 
 
-def similarity_score_accuracy(classes: dict, V_matrix: torch.Tensor, T_matrix: torch.Tensor):
+def similarity_score_accuracy(
+    classes: dict, V_matrix: torch.Tensor, T_matrix: torch.Tensor
+):
     mean = np.mean(
-        [calculate_similarity_score_accuracy_for_class(class_name, V_matrix, T_matrix, classes) for class_name in
-         classes.values()])
+        [
+            calculate_similarity_score_accuracy_for_class(
+                class_name, V_matrix, T_matrix, classes
+            )
+            for class_name in classes.values()
+        ]
+    )
     return "Similarity Score accuracy: {}%".format(mean)
 
 
-def calculate_max_score_accuracy_for_class(class_name: str, V_matrix: torch.Tensor, T_matrix: torch.Tensor,
-                                           classes: dict):
+def calculate_max_score_accuracy_for_class(
+    class_name: str, V_matrix: torch.Tensor, T_matrix: torch.Tensor, classes: dict
+):
     """
     Args:
         class_name: name of class from classes dict
@@ -287,6 +321,12 @@ def calculate_max_score_accuracy_for_class(class_name: str, V_matrix: torch.Tens
 
 
 def max_score_accuracy(classes: dict, V_matrix: torch.Tensor, T_matrix: torch.Tensor):
-    mean = np.mean([calculate_max_score_accuracy_for_class(class_name, V_matrix, T_matrix, classes) for class_name in
-                    classes.values()])
+    mean = np.mean(
+        [
+            calculate_max_score_accuracy_for_class(
+                class_name, V_matrix, T_matrix, classes
+            )
+            for class_name in classes.values()
+        ]
+    )
     return "Max Score accuracy: {}%".format(mean)
