@@ -2,7 +2,7 @@
 
 ## How to install
 ```bash
-git clone https://github.com/icml24/SparseCBM
+git clone -b rebuttal https://github.com/icml24/SparseCBM
 cd SparseCBM
 pip install -r requirements.txt
 ```
