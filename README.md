@@ -18,19 +18,20 @@ We report with the additional results on interpretability and final classificati
 
 |  Model   |CIFAR10| CIFAR100 |ImageNet | CUB 200 | Places365  |
 |---------|------|--------|-----|---|-----|
-|Sparse-CBM (Ours)|      |     || ||
-|$\ell_1$-CBM (Ours)          |       |||  |+|
-| Contrastive-CBM  |   +   |     |   |     |    |      |    |     | 
-| Label-free CBM  |      |     |   |     |    |      |    |     |
-| Post-hoc CBM (CLIP)  |      |     |   |     |    |      |    |     |  
-| LaBo |      |     |   |     |    |      |    |     |  
-| Linear Probing |      |     |   |     |    |      |    |     |  
+|Sparse-CBM (Ours)|  **91.17%**    |  **74.88%**   |71.61%| **80.02%**|41.34%|
+|$\ell_1$-CBM (Ours) |   85.11%    |73.24%|71.02%| 74.91% |40.87%|
+| Contrastive-CBM  |   84.75%   |  68.46%   | 70.22%  |  67.04%   |  40.22%  |   
+| Label-free CBM  |   86.40%   |   65.13%   |  **71.95%** |  74.31%   |  **43.68%**  |  
+| Post-hoc CBM (CLIP)  |   83.34%    |  57.20%    |  62.57%  |   63.92%  |  39.66%  |   
+| LaBo (full-supervised) |   87.90%   |  69.10%    |  70.40% |   71.80%  |  39.43%  | 
+|----------------------|-------|--------|--------|--------|--------|
+| Linear Probing |   96.12%   |  80.03%   | 83.90%  |   79.29%  |  48.33%  | 
 
 |  Model   |CIFAR10| CIFAR100 |ImageNet | CUB 200 | Places365  |
 |---------|------|--------|-----|---|-----|
-|Concept Matrix Search (Ours)|      |     || ||
-|DescriptionCLS         |       |||  |+|
-| Zero-shot CLIP-ViT-L/14 |   +   |     |   |     |    |      |    |     | 
+|Concept Matrix Search (Ours)|   **85.03%**   |  62.95%   |**77.82%**| **65.17%** |39.43%|
+|DescriptionCLS         |   81.61%     |**68.32%**|75.00%| 63.46% |40.55%|
+| Zero-shot ViT-L/14 |   81.79%   |   52.84%  |  % |   62.63%  |   **41.12%** |  
 3) For interpretability, we show a comparison between concepts extracted by CBM variant and backbone CLIP model:
 
 ## Implementation details
@@ -67,7 +68,7 @@ trainer = BottleneckTrainer(
 trainer.train()
 trainer.test()
 ```
-If you would like to record the interpretability of the trainer CBM, feel free to check the overall metrics and play on several images similar to <ins>interpret.ipynb</ins> and <ins>cub_interpret.ipynb</ins>.
+If you would like to record the interpretability of the trainer CBM, feel free to check the overall metrics and play on several images similar to ```interpret.ipynb``` and ```cub_interpret.ipynb```.
 ```python
 plot_trainer_metrics(trainer.hist)
 ```
