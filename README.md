@@ -31,7 +31,7 @@ We report with the additional results on interpretability and final classificati
 |---------|------|--------|-----|---|-----|
 |Concept Matrix Search (Ours)|   **85.03%**   |  62.95%   |**77.82%**| **65.17%** |39.43%|
 |DescriptionCLS         |   81.61%     |**68.32%**|75.00%| 63.46% |40.55%|
-| Zero-shot ViT-L/14 |   81.79%   |   52.84%  |  76.20% |   62.63%  |   **41.12%** |  
+| Zero-shot CLIP-ViT-L/14 |   81.79%   |   52.84%  |  76.20% |   62.63%  |   **41.12%** |  
 3) For interpretability, we show a comparison between concepts extracted by CBM variant and backbone CLIP model:
 
 <p align="center"><strong>Concepts extracted by CLIP</strong></p>
