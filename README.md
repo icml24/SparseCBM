@@ -115,7 +115,7 @@ trainer = BottleneckTrainer(
 trainer.train()
 trainer.test()
 ```
-If you would like to record the interpretability of the trained CBM, feel free to check the overall metrics and play on several images similar to ```interpret.ipynb``` and ```cub_interpret.ipynb```.
+If you would like to record the interpretability of the trained CBM, feel free to check the overall metrics and play with several images similarly to ```interpret.ipynb``` and ```cub_interpret.ipynb```.
 ```python
 plot_trainer_metrics(trainer.hist)
 ```
