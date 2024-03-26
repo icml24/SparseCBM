@@ -45,7 +45,7 @@ config = CBMConfig(
     num_concepts=len(concepts),
     num_classes=200,
     run_name="demo_run",
-    net_types=["base", "base", "lora"],
+    net_types=["base", "base", "base"],
     backbones=[Constants.clip_large_link, Constants.clip_large_link, Constants.clip_large_link],
     displayed_names=["model no 1", "model no 2", "model no 3"],
     training_methods=["gumbel", "contrastive", "l1"],
@@ -53,7 +53,6 @@ config = CBMConfig(
     lrs=[1e-3, 3e-4, 3e-4],
     cbl_lrs=[1e-3, 3e-4, 3e-4],
     train_backbones=[False, False, True],
-    lora_connections=["last"],
 )
 
 trainer = BottleneckTrainer(
