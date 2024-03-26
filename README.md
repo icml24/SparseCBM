@@ -34,6 +34,54 @@ We report with the additional results on interpretability and final classificati
 | Zero-shot ViT-L/14 |   81.79%   |   52.84%  |  76.20% |   62.63%  |   **41.12%** |  
 3) For interpretability, we show a comparison between concepts extracted by CBM variant and backbone CLIP model:
 
+<p align="center"><strong>Concepts extracted by CLIP</strong></p>
+
+![Screenshot](./interpretability/clip_im_1.png)
+
+<p align="center"><strong>Concepts extracted by Sparse-CBM</strong></p>
+
+![Screenshot](./interpretability/sparse_im_1.png)
+
+<p align="center"><strong>Concepts extracted by $\ell_1$-CBM</strong></p>
+
+![Screenshot](./interpretability/l1_im1.png)
+
+<p align="center"><strong>Concepts extracted by Contrastive-CBM</strong></p>
+
+![Screenshot](./interpretability/contr_im_1.png)
+
+<p align="center"><strong>Concepts extracted by CLIP</strong></p>
+
+![Screenshot](./interpretability/clip_im_2.png)
+
+<p align="center"><strong>Concepts extracted by Sparse-CBM</strong></p>
+
+![Screenshot](./interpretability/sparse_im_2.png)
+
+<p align="center"><strong>Concepts extracted by $\ell_1$-CBM</strong></p>
+
+![Screenshot](./interpretability/l1_im_2.png)
+
+<p align="center"><strong>Concepts extracted by Contrastive-CBM</strong></p>
+
+![Screenshot](./interpretability/contr_im_2.png)
+
+<p align="center"><strong>Concepts extracted by CLIP</strong></p>
+
+![Screenshot](./interpretability/clip_im_4.png)
+
+<p align="center"><strong>Concepts extracted by Sparse-CBM</strong></p>
+
+![Screenshot](./interpretability/sparse_im_4.png)
+
+<p align="center"><strong>Concepts extracted by $\ell_1$-CBM</strong></p>
+
+![Screenshot](./interpretability/l1_im_4.png)
+
+<p align="center"><strong>Concepts extracted by Contrastive-CBM</strong></p>
+
+![Screenshot](./interpretability/contr_im_4.png)
+
 ## Implementation details
 To run our ```BottleneckTrainer``` you should create an appropriate ```CBMConfig``` instance and prepare dataloaders as in the ```demo.ipynb```. Next, we provide a mock example of how the CBM training starts:
 ```python
